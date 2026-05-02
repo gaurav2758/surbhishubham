@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Surbhi & Shubham | The Big Fat Jain Wedding</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Pinyon+Script&family=Montserrat:wght@200;300;400&display=swap"
+    rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    :root {
+      --cream: #fdf8f2;
+      --blush: #f2d6ce;
+      --rose: #c4827a;
+      --dusty: #d4a5a0;
+      --gold: #b8965a;
+      --gold-light: #e8c887;
+      --sage: #9aab8e;
+      --brown: #6b4f3a;
+      --text: #3d2b1f;
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── ENVELOPE SCREEN ── */
+    #envelope-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+    }
+
+    .env-wrap {
+      position: relative;
+      width: min(340px, 88vw);
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+
+    .env-body {
+      width: 100%;
+      padding-top: 66%;
+      background: linear-gradient(145deg, #fdf0e8, #fae3d9);
+      position: relative;
+      box-shadow: 0 20px 60px rgba(100, 50, 30, .18);
+      border-radius: 2px;
+      overflow: visible;
+    }
+
+    /* Bottom pocket */
+    .env-pocket {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #fae3d9, #f5cfc4);
+      clip-path: polygon(0 30%, 50% 60%, 100% 30%, 100% 100%, 0 100%);
+    }
+
+    /* Left & Right triangles */
+    .env-left {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(135deg, #f7d8ce, #f0c5b8);
+      clip-path: polygon(0 0, 100% 45%, 0 100%);
+    }
+
+    .env-right {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(225deg, #f7d8ce, #f0c5b8);
+      clip-path: polygon(100% 0, 0 45%, 100% 100%);
+    }
+
+    /* Top flap */
+    .env-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform-origin: top center;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(.77, 0, .18, 1);
+      z-index: 5;
+    }
+
+    .env-flap-face {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(170deg, #faeae0, #f5d5c8);
+      clip-path: polygon(0 0, 50% 58%, 100% 0);
+      backface-visibility: hidden;
+    }
+
+    .env-flap-back {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(10deg, #f0c5b8, #e8b0a5);
+      clip-path: polygon(0 0, 50% 58%, 100% 0);
+      transform: rotateX(180deg);
+      backface-visibility: hidden;
+    }
+
+    .env-wrap.open .env-flap {
+      transform: rotateX(-180deg)
+    }
+
+    /* Wax seal */
+    .seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #c4827a, #8b3a3a);
+      box-shadow: 0 4px 16px rgba(139, 58, 58, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: opacity .4s;
+    }
+
+    .seal img {
+      width: 40px;
+      height: 40px;
+      filter: brightness(0) invert(1);
+      object-fit: contain
+    }
+
+    .env-wrap.open .seal {
+      opacity: 0;
+      pointer-events: none
+    }
+
+    /* Card rising from envelope */
+    .env-card {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%) translateY(0px);
+      width: 88%;
+      background: linear-gradient(160deg, var(--cream), #fdf0e8);
+      border: 1px solid rgba(184, 150, 90, .25);
+      padding: 28px 20px 24px;
+      text-align: center;
+      /* Raise above envelope flap to avoid overlap */
+      z-index: 12;
+      box-shadow: 0 4px 20px rgba(100, 50, 30, .1);
+      transition: transform 1.4s cubic-bezier(.77, 0, .18, 1), opacity .6s;
+      pointer-events: none;
+    }
+
+    .env-wrap.open .env-card {
+      transform: translateX(-50%) translateY(-130%);
+      pointer-events: none;
+    }
+
+    .env-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 11px;
+      letter-spacing: .4em;
+      color: var(--rose);
+      text-transform: uppercase;
+      margin-bottom: 8px
+    }
+
+    .env-card-name {
+      font-family: 'Pinyon Script', cursive;
+      font-size: 2.4rem;
+      color: var(--brown);
+      line-height: 1.1
+    }
+
+    .env-card-sub {
+      font-size: 8px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      margin-top: 6px
+    }
+
+    /* Tap hint */
+    .tap-hint {
+      position: absolute;
+      bottom: -48px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      animation: pulse 2s ease-in-out infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .5
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    /* ── TRANSITION OVERLAY ── */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      background: var(--cream);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .8s ease;
+    }
+
+    #overlay.active {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    /* ── INVITE CONTENT ── */
+    #invite {
+      display: none;
+      position: relative;
+    }
+
+    /* Floating floral corners */
+    .corner {
+      position: fixed;
+      width: 160px;
+      pointer-events: none;
+      z-index: 10;
+      opacity: .7;
+      mix-blend-mode: multiply;
+    }
+
+    .corner-tl {
+      top: 0;
+      left: 0;
+      transform-origin: top left
+    }
+
+    .corner-tr {
+      top: 0;
+      right: 0;
+      transform: scaleX(-1);
+      transform-origin: top right
+    }
+
+    .corner-bl {
+      bottom: 0;
+      left: 0;
+      transform: scaleY(-1);
+      transform-origin: bottom left
+    }
+
+    .corner-br {
+      bottom: 0;
+      right: 0;
+      transform: scale(-1);
+      transform-origin: bottom right
+    }
+
+    /* Sections */
+    .page {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      text-align: center;
+    }
+
+    /* BG layers */
+    .bg-mountains {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url('mountains_bg.png') center bottom/cover no-repeat;
+      opacity: .12;
+    }
+
+    /* Gold divider */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px auto;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold))
+    }
+
+    .divider-line.rev {
+      background: linear-gradient(to left, transparent, var(--gold))
+    }
+
+    .divider-diamond {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* Typography helpers */
+    .label {
+      font-size: 9px;
+      letter-spacing: .5em;
+      text-transform: uppercase;
+      color: var(--dusty);
+      font-weight: 400;
+    }
+
+    .script-lg {
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(3rem, 12vw, 5.5rem);
+      color: var(--rose);
+      line-height: 1.1
+    }
+
+    .script-md {
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      color: var(--rose);
+      line-height: 1.1
+    }
+
+    .serif-hero {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 10vw, 5rem);
+      font-weight: 300;
+      letter-spacing: .12em;
+      color: var(--brown);
+      text-transform: uppercase
+    }
+
+    .serif-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-style: italic;
+      color: var(--dusty)
+    }
+
+    .venue {
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold)
+    }
+
+    /* Event card */
+    .card {
+      position: relative;
+      max-width: 400px;
+      width: 100%;
+      background: rgba(253, 248, 242, .85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(184, 150, 90, .2);
+      padding: 40px 28px 36px;
+      margin: 0 auto;
+    }
+
+    .card::before,
+    .card::after {
+      content: '';
+      position: absolute;
+      border: 1px solid rgba(184, 150, 90, .12);
+    }
+
+    .card::before {
+      inset: 8px
+    }
+
+    .card::after {
+      inset: 5px;
+      border-color: rgba(184, 150, 90, .06)
+    }
+
+    .event-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .filmi {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .event-name {
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(2.5rem, 10vw, 4rem);
+      color: var(--rose);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .event-date {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--brown);
+      letter-spacing: .15em;
+    }
+
+    .dress-badge {
+      display: inline-block;
+      margin-top: 16px;
+      border: 1px solid var(--rose);
+      padding: 6px 16px;
+      font-size: 8px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--rose);
+    }
+
+    /* Parents / Credits */
+    .credits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px 32px;
+      max-width: 360px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .credits-grid p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: .95rem;
+      line-height: 1.6;
+      color: var(--brown)
+    }
+
+    /* Animated classes */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+    }
+
+    /* Gold particles */
+    #particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: var(--gold-light);
+      border-radius: 50%;
+      opacity: 0;
+    }
+
+    /* Floating animation for logo */
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-8px)
+      }
+    }
+
+    .float-anim {
+      animation: float 4s ease-in-out infinite
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: .5;
+    }
+
+    .scroll-hint span {
+      font-size: 8px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--dusty)
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: grow 1.5s ease-in-out infinite
+    }
+
+    @keyframes grow {
+      0% {
+        transform: scaleY(0);
+        transform-origin: top
+      }
+
+      50% {
+        transform: scaleY(1);
+        transform-origin: top
+      }
+
+      51% {
+        transform-origin: bottom
+      }
+
+      100% {
+        transform: scaleY(0);
+        transform-origin: bottom
+      }
+    }
+
+    /* Final section */
+    .finale-names {
+      font-family: 'Pinyon Script', cursive;
+      font-size: clamp(3.5rem, 14vw, 7rem);
+      color: var(--rose);
+      line-height: 1;
+    }
+
+    /* Mobile adjustments */
+    @media(max-width:480px) {
+      .corner {
+        width: 110px
+      }
+
+      .page {
+        padding: 70px 20px 50px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- PARTICLES -->
+  <div id="particles"></div>
+
+  <!-- ENVELOPE SCREEN -->
+  <div id="envelope-screen">
+    <div class="env-wrap" id="envWrap">
+      <div class="env-body">
+        <div class="env-pocket"></div>
+        <div class="env-left"></div>
+        <div class="env-right"></div>
+        <div class="env-card">
+          <div class="env-card-title">You are cordially invited to</div>
+          <div class="env-card-name">Surbhi &amp; Shubham</div>
+          <div class="env-card-sub">The Big Fat Jain Wedding</div>
+        </div>
+        <div class="env-flap">
+          <div class="env-flap-face"></div>
+          <div class="env-flap-back"></div>
+        </div>
+        <div class="seal">
+          <img src="logo.png" alt="SS">
+        </div>
+      </div>
+      <div class="tap-hint">Tap to open</div>
+    </div>
+  </div>
+
+  <!-- OVERLAY -->
+  <div id="overlay"></div>
+
+  <!-- INVITE -->
+  <div id="invite">
+    <!-- Fixed corners -->
+    <img src="floral_corner.png" class="corner corner-tl" alt="">
+    <img src="floral_corner.png" class="corner corner-tr" alt="">
+    <img src="floral_corner.png" class="corner corner-bl" alt="">
+    <img src="floral_corner.png" class="corner corner-br" alt="">
+
+    <!-- 1. HERO -->
+    <section class="page" id="hero">
+      <div class="bg-mountains"></div>
+      <div style="position:relative;z-index:2;width:100%;max-width:480px">
+        <img src="logo.png" alt="SS" class="float-anim reveal"
+          style="width:80px;margin:0 auto 28px;display:block;mix-blend-mode:multiply">
+        <p class="label reveal" style="margin-bottom:16px">Presenting</p>
+        <h1 class="serif-hero reveal" style="margin-bottom:0">The Big Fat</h1>
+        <div class="script-lg reveal" style="margin-bottom:4px">Jain Wedding</div>
+        <div class="divider reveal">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line rev"></div>
+        </div>
+        <div class="reveal" style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,7vw,2.8rem);color:var(--brown)">
+              Surbhi</div>
+            <div class="label">The Gorgeous Bride</div>
+          </div>
+          <div class="script-md" style="color:var(--gold)">&amp;</div>
+          <div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,7vw,2.8rem);color:var(--brown)">
+              Shubham</div>
+            <div class="label">The Dashing Groom</div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- 2. PARENTS & CREDITS -->
+    <section class="page" style="background:linear-gradient(180deg,var(--cream),#fdf0e8)">
+      <p class="label reveal" style="margin-bottom:32px">Starring &amp; Presented by</p>
+      <div class="credits-grid reveal">
+        <div>
+          <p class="label" style="margin-bottom:8px">Bride's Family</p>
+          <p>Mr Praveen Jain<br>&amp; Seema Jain</p>
+        </div>
+        <div>
+          <p class="label" style="margin-bottom:8px">Groom's Family</p>
+          <p>Mr Praveen Jain<br>&amp; Neeru Jain</p>
+        </div>
+      </div>
+      <div class="divider reveal">
+        <div class="divider-line"></div>
+        <div class="divider-diamond"></div>
+        <div class="divider-line rev"></div>
+      </div>
+      <div class="reveal" style="max-width:340px">
+        <p class="label" style="margin-bottom:10px">Produced by</p>
+        <p
+          style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--brown);margin-bottom:24px">
+          Isha – Ankit</p>
+        <p class="label" style="margin-bottom:10px">Directed by the blessings of</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--dusty);line-height:1.8">
+          Late Lala Tarash Chand Jain<br>
+          <span style="color:var(--gold)">&amp;</span><br>
+          Late Shri Ratan Kumar Bairathi
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. SAGAN -->
+    <section class="page" style="background:var(--cream)">
+      <div class="bg-mountains"></div>
+      <div class="card reveal" style="position:relative;z-index:2">
+        <span class="event-icon">🍾</span>
+        <div class="filmi">"Rishta Pakka Picture Baaki Hai!"</div>
+        <div class="event-name">Sagan</div>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line rev"></div>
+        </div>
+        <div class="event-date">7 June</div>
+        <div class="venue" style="margin-top:10px">Vione Banquets, Delhi</div>
+      </div>
+    </section>
+
+    <!-- 4. MEHNDI -->
+    <section class="page" style="background:linear-gradient(160deg,#fdf0e8,#f5ede8)">
+      <div class="card reveal">
+        <span class="event-icon">🌿</span>
+        <div class="filmi">"Mehndi, Masti aur Mountain Waali Shaam"</div>
+        <div class="event-name" style="color:var(--sage)">Mehndi &amp; Bhaat</div>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line rev"></div>
+        </div>
+        <div class="event-date">19 June · High Tea</div>
+        <div class="venue" style="margin-top:10px">Royal Orchard, Mussoorie</div>
+      </div>
+    </section>
+
+    <!-- 5. SANGEET -->
+    <section class="page" style="background:linear-gradient(160deg,#f7edf5,#fdf0e8)">
+      <div class="card reveal" style="border-color:rgba(164,100,160,.2)">
+        <span class="event-icon">💃</span>
+        <div class="filmi">"Shake it like Shammi – Wedding Edition"</div>
+        <div class="event-name" style="color:#9b6fa0">Sangeet Night</div>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line rev"></div>
+        </div>
+        <div class="event-date">19 June · 7 PM</div>
+        <div class="venue" style="margin-top:10px">Royal Orchard, Mussoorie</div>
+        <div class="dress-badge" style="border-color:#9b6fa0;color:#9b6fa0">✦ Glam Edition · Sham Shandaar ✦</div>
+      </div>
+    </section>
+
+    <!-- 6. HALDI -->
+    <section class="page" style="background:linear-gradient(160deg,#fff8e8,#fdf0e8)">
+      <div class="card reveal" style="border-color:rgba(220,160,60,.3)">
+        <span class="event-icon">🌼</span>
+        <div class="filmi">"Haldi Ke Rang, Pyaar Ke Sang"</div>
+        <div class="event-name" style="color:#c9921a">Haldi</div>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line rev"></div>
+        </div>
+        <div class="event-date">20 June · Morning</div>
+        <div class="venue" style="margin-top:10px">Parking Lot, Royal Orchard, Mussoorie</div>
+        <div class="dress-badge" style="border-color:#c9921a;color:#c9921a">✦ Orange &amp; Pink ✦</div>
+      </div>
+    </section>
+
+    <!-- 7. WEDDING -->
+    <section class="page" style="background:var(--cream)">
+      <div class="bg-mountains" style="opacity:.18"></div>
+      <div class="card reveal"
+        style="position:relative;z-index:2;border-color:rgba(184,150,90,.3);padding:48px 32px 44px">
+        <span class="event-icon">👰🤵</span>
+        <div class="filmi">"Shaadi Ke Side Effects: Happily Ever After"</div>
+        <div class="event-name" style="font-size:clamp(3rem,12vw,5rem)">The Wedding</div>
+        <div class="divider">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line rev"></div>
+        </div>
+        <div class="event-date" style="font-size:1.3rem">20 June · Evening</div>
+        <div class="venue" style="margin-top:10px">Royal Orchard, Mussoorie</div>
+        <div class="dress-badge">✦ Shadi Wale ✦</div>
+      </div>
+    </section>
+
+    <!-- 8. FINALE -->
+    <section class="page" style="background:linear-gradient(180deg,var(--cream),#fdf0e8,var(--cream));min-height:80svh">
+      <img src="logo.png" alt="SS" class="reveal"
+        style="width:64px;margin:0 auto 24px;display:block;mix-blend-mode:multiply">
+      <p class="label reveal" style="margin-bottom:20px">With love &amp; joy</p>
+      <div class="finale-names reveal">Surbhi &amp; Shubham</div>
+      <div class="divider reveal">
+        <div class="divider-line"></div>
+        <div class="divider-diamond"></div>
+        <div class="divider-line rev"></div>
+      </div>
+      <p class="serif-sub reveal">#SurbhiGotsShubham</p>
+    </section>
+  </div>
+
+  <script>
+    // ── PARTICLES ──
+    (function () {
+      const c = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;width:${Math.random() * 3 + 1}px;height:${Math.random() * 3 + 1}px;`;
+        c.appendChild(p);
+        animParticle(p);
+      }
+      function animParticle(el) {
+        const dur = Math.random() * 8 + 6;
+        const delay = Math.random() * 10;
+        gsap.fromTo(el,
+          { opacity: 0, y: 0, x: 0 },
+          { opacity: Math.random() * .4 + .1, y: -(Math.random() * 200 + 100), x: (Math.random() - 0.5) * 80, duration: dur, delay, ease: 'none', repeat: -1, repeatDelay: Math.random() * 5 }
+        );
+      }
+    })();
+
+    // ── ENVELOPE ──
+    const envWrap = document.getElementById('envWrap');
+    const envScreen = document.getElementById('envelope-screen');
+    const overlay = document.getElementById('overlay');
+    const invite = document.getElementById('invite');
+    let opened = false;
+
+    envWrap.addEventListener('click', () => {
+      if (opened) return;
+      opened = true;
+      envWrap.classList.add('open');
+
+      setTimeout(() => {
+        overlay.classList.add('active');
+        setTimeout(() => {
+          envScreen.style.display = 'none';
+          invite.style.display = 'block';
+          document.body.style.overflowX = 'hidden';
+          initInvite();
+          setTimeout(() => overlay.classList.remove('active'), 300);
+        }, 600);
+      }, 2000);
+    });
+
+    // ── INVITE ANIMATIONS ──
+    function initInvite() {
+      gsap.registerPlugin(ScrollTrigger);
+
+      const lenis = new Lenis({ duration: 1.3, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+      function raf(t) { lenis.raf(t); requestAnimationFrame(raf); }
+      requestAnimationFrame(raf);
+      lenis.on('scroll', ScrollTrigger.update);
+
+      // Reveal all .reveal elements
+      gsap.utils.toArray('.reveal').forEach(el => {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none reverse' }
+        });
+      });
+
+      // Hero initial anim
+      gsap.timeline()
+        .to('#hero .reveal', { opacity: 1, y: 0, duration: 1, stagger: .15, ease: 'power3.out' }, 0.3);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surbhi & Shubham | The Big Fat Jain Wedding</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.32/dist/lenis.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --maroon: #800000;
+            --gold: #b38728;
+            --sage: #8c9c8e;
+            --navy: #1a2a44;
+            --cream: #fbfaf5;
+            --pastel-peach: #ffdfd3;
+        }
+
+        body {
+            background-color: var(--cream);
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--navy);
+            overflow-x: hidden;
+        }
+
+        .script { font-family: 'Pinyon Script', cursive; }
+        .serif { font-family: 'Playfair Display', serif; }
+
+        .section-bg {
+            background-image: url('mountains_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.15;
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1.5rem;
+            position: relative;
+            text-align: center;
+        }
+
+        .fade-up { opacity: 0; transform: translateY(30px); }
+
+        .divider {
+            width: 80px;
+            height: 1px;
+            background: var(--gold);
+            margin: 2rem auto;
+        }
+
+        .event-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(179, 135, 40, 0.2);
+            padding: 3rem 2rem;
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid rgba(179, 135, 40, 0.1);
+            pointer-events: none;
+        }
+
+        .dress-code {
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--maroon);
+            margin-top: 1.5rem;
+            font-weight: 600;
+        }
+
+        .mountain-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30vh;
+            background: linear-gradient(to top, var(--cream), transparent);
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mountain-overlay"></div>
+
+    <!-- SMOOTH SCROLL WRAPPER -->
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+
+            <!-- HERO SECTION -->
+            <section class="section">
+                <div class="section-bg"></div>
+                <img src="logo.png" class="w-24 mb-12 fade-up mix-blend-multiply" alt="Logo">
+                <p class="text-xs tracking-[0.6em] uppercase text-gray-500 mb-6 fade-up">Presenting</p>
+                <h1 class="serif text-4xl md:text-6xl tracking-widest text-[var(--maroon)] uppercase mb-4 fade-up">The Big Fat</h1>
+                <h1 class="script text-7xl md:text-9xl text-[var(--gold)] mb-8 fade-up">Jain Wedding</h1>
+                <div class="divider fade-up"></div>
+                <div class="flex flex-col md:flex-row items-center gap-4 md:gap-12 fade-up">
+                    <div class="text-center">
+                        <h2 class="serif text-3xl md:text-5xl">Surbhi</h2>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">The Gorgeous Bride</p>
+                    </div>
+                    <div class="script text-4xl text-[var(--gold)]">&amp;</div>
+                    <div class="text-center">
+                        <h2 class="serif text-3xl md:text-5xl">Shubham</h2>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 mt-2">The Dashing Groom</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CREDITS SECTION -->
+            <section class="section bg-white/50">
+                <div class="max-w-xl mx-auto space-y-12">
+                    <div class="fade-up">
+                        <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mb-4">The Proud Parents</p>
+                        <div class="grid grid-cols-2 gap-8">
+                            <div>
+                                <p class="text-sm font-semibold">Mr Praveen Jain</p>
+                                <p class="text-sm font-semibold">&amp; Seema Jain</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold">Mr Praveen Jain</p>
+                                <p class="text-sm font-semibold">&amp; Neeru Jain</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-12 fade-up">
+                        <div>
+                            <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mb-2">Produced by</p>
+                            <p class="serif italic text-xl">Isha - Ankit</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] uppercase tracking-[0.4em] text-gray-400 mb-2">Directed by</p>
+                            <p class="text-xs leading-relaxed">The Heavenly blessings of<br><b>Late Lala Tarash Chand Jain</b><br>&<br><b>Late Shri Ratan Kumar Bairathi</b></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EVENT: SAGAN -->
+            <section class="section">
+                <div class="section-bg" style="opacity: 0.1;"></div>
+                <div class="event-card fade-up">
+                    <p class="text-[var(--gold)] script text-4xl mb-4">Rishta Pakka Picture Baaki Hai!</p>
+                    <h3 class="serif text-5xl text-[var(--maroon)] uppercase mb-6">Sagan</h3>
+                    <div class="divider"></div>
+                    <p class="text-lg serif italic">7 June</p>
+                    <p class="text-xs tracking-widest uppercase mt-4">Vione Banquets, Delhi</p>
+                </div>
+            </section>
+
+            <!-- EVENT: MEHNDI -->
+            <section class="section">
+                <div class="event-card fade-up">
+                    <p class="text-[var(--gold)] script text-4xl mb-4">Mehndi, Masti aur Mountain Waali Shaam</p>
+                    <h3 class="serif text-5xl text-[var(--sage)] uppercase mb-6">Mehndi + Bhaat</h3>
+                    <div class="divider"></div>
+                    <p class="text-lg serif italic">19 June | High Tea</p>
+                    <p class="text-xs tracking-widest uppercase mt-4">Royal Orchard, Mussoorie</p>
+                </div>
+            </section>
+
+            <!-- EVENT: SANGEET -->
+            <section class="section">
+                <div class="event-card fade-up" style="background: rgba(26, 42, 68, 0.05);">
+                    <p class="text-[var(--gold)] script text-4xl mb-4">Shake it like Shammi</p>
+                    <h3 class="serif text-5xl text-[var(--navy)] uppercase mb-6">Sangeet Night</h3>
+                    <p class="text-[10px] tracking-widest text-gray-400 italic mb-6">Wedding Edition</p>
+                    <div class="divider"></div>
+                    <p class="text-lg serif italic">19 June | 7 PM</p>
+                    <p class="text-xs tracking-widest uppercase mt-4">Royal Orchard, Mussoorie</p>
+                    <div class="dress-code">Dress code: Glam Edition<br>Sham Shandaar</div>
+                </div>
+            </section>
+
+            <!-- EVENT: HALDI -->
+            <section class="section">
+                <div class="event-card fade-up" style="background: rgba(255, 223, 211, 0.2);">
+                    <p class="text-[var(--gold)] script text-4xl mb-4">Haldi Ke Rang, Pyaar Ke Sang</p>
+                    <h3 class="serif text-5xl text-[#ccac00] uppercase mb-6">Haldi</h3>
+                    <div class="divider"></div>
+                    <p class="text-lg serif italic">20 June</p>
+                    <p class="text-xs tracking-widest uppercase mt-4">Parking Lot, Royal Orchard, Mussoorie</p>
+                    <div class="dress-code">Dress code: Orange and Pink</div>
+                </div>
+            </section>
+
+            <!-- EVENT: WEDDING -->
+            <section class="section">
+                <div class="section-bg" style="opacity: 0.2;"></div>
+                <div class="event-card fade-up">
+                    <p class="text-[var(--gold)] script text-4xl mb-4">Happily Ever After</p>
+                    <h3 class="serif text-6xl text-[var(--maroon)] uppercase mb-8">The Wedding</h3>
+                    <p class="text-[10px] tracking-widest text-gray-400 italic mb-8">Shaadi Ke Side Effects</p>
+                    <div class="divider"></div>
+                    <p class="text-2xl serif italic mb-4">20 June</p>
+                    <p class="text-sm tracking-widest uppercase mb-8">Royal Orchard, Mussoorie</p>
+                    <div class="dress-code">Dress code: Shadi Wale</div>
+                </div>
+            </section>
+
+            <!-- FINALE -->
+            <section class="section h-[50vh]">
+                <h2 class="script text-6xl text-[var(--maroon)] mb-4 fade-up">We can't wait to celebrate with you</h2>
+                <p class="text-xs tracking-[0.5em] uppercase text-gray-400 fade-up">#SurbhiGotsShubham</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script>
+        // LENIS SMOOTH SCROLL
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // GSAP ANIMATIONS
+        gsap.registerPlugin(ScrollTrigger);
+
+        const fadeUps = document.querySelectorAll('.fade-up');
+        fadeUps.forEach((el) => {
+            gsap.to(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 90%',
+                    toggleActions: 'play none none reverse'
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1.5,
+                ease: 'power3.out'
+            });
+        });
+
+        // Parallax background
+        gsap.to('.section-bg', {
+            scrollTrigger: {
+                scrub: true
+            },
+            y: 100
+        });
+    </script>
+</body>
+</html>
